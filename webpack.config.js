@@ -45,7 +45,7 @@ module.exports = (env, {
         output: {
             filename: PROD ? '[name].[contenthash].js' : '[name].[fullhash].js',
             path: path.resolve(__dirname, 'dist'),
-            publicPath: './',
+            publicPath: '/slotjs/',
         },
 
         devServer: {

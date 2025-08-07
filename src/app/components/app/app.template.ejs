@@ -89,6 +89,11 @@
 
     <%- include ../header/header.template.ejs %>
 
+    <div id="bet">
+        <div>Bet Amount</div>
+        <input type="number" name="bet" value="1" min="1" max="1000" oninput="enforceRange(this)"/>
+    </div>
+
     <main class="app__main" id="main">
         <section class="sm__base">
             <!-- <div class="sm__display sm__display--background"></div> -->
@@ -125,4 +130,14 @@
     <%- include ../footer/footer.template.ejs %>
 
 </body>
+<script>
+    function enforceRange(input) {
+        const val = parseInt(input.value, 10);
+        if (val > 1000) {
+            input.value = 1000;
+        } else if (val < 1) {
+            input.value = 1;
+        }
+    }
+</script>
 </html>

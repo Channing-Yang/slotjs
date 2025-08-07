@@ -165,8 +165,8 @@ export class App {
 
     }
 
-    handleUseCoin() {
-        localStorage.coins = this.coins = Math.max(this.coins - 1, 0) || 100;
+    handleUseCoin(betAmount = 1) {
+        localStorage.coins = this.coins = Math.max(this.coins - betAmount, 0) || 100;
         localStorage.jackpot = ++this.jackpot;
         localStorage.spins = ++this.spins;
         localStorage.lastSpin = this.lastSpin = Date.now();
@@ -175,10 +175,10 @@ export class App {
     }
 
     handleGetPrice(jackpotPercentage) {
-        const price = Math.min(Math.max(Math.ceil(jackpotPercentage * this.jackpot), 10), this.jackpot);
+        // const price = Math.min(Math.max(Math.ceil(jackpotPercentage * this.jackpot), 10), this.jackpot);
 
-        localStorage.jackpot = this.jackpot = Math.max(this.jackpot - price, 0) || 1000;
-        localStorage.coins = this.coins += price;
+        // localStorage.jackpot = this.jackpot = Math.max(this.jackpot - price, 0) || 1000;
+        localStorage.coins = this.coins += jackpotPercentage;
 
         this.refreshGameInfo();
     }

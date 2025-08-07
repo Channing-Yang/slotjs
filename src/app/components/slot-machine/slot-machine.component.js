@@ -62,6 +62,14 @@ export class SlotMachine {
     isPaused = false;
     keydownTimeoutID = null;
     keydownLastCalled = 0;
+    reset = false;
+    coinMap = {
+        0: 1,
+        2: 5,
+        3: 15,
+        4: 50,
+        5: 100,
+    };
 
     constructor(
         wrapper,
@@ -128,7 +136,10 @@ export class SlotMachine {
     }
 
     start() {
-        this.handleUseCoin();
+        const bet = document.querySelector('input[name="bet"]');
+        const betAmount = parseInt(bet?.value ?? 0, 10);
+
+        this.handleUseCoin(betAmount);
         this.currentCombination = [];
         this.currentReel = 0;
         this.zoomOut();
@@ -141,10 +152,15 @@ export class SlotMachine {
 
         this.lastUpdate = performance.now();
         requestAnimationFrame(() => this.tick());
+
+        bet.disabled = true;
     }
 
     stop() {
         const currentPrize = this.checkPrize();
+        const bet = document.querySelector('input[name="bet"]');
+
+        bet.disabled = false;
 
         this.currentReel = null;
         this.zoomIn();
@@ -242,6 +258,8 @@ export class SlotMachine {
     checkPrize() {
         const { currentCombination, reelCount, symbols } = this;
         const occurrencesCount = {};
+        const bet = document.querySelector('input[name="bet"]');
+        const betAmount = parseInt(bet?.value ?? 0, 10);
 
         let maxOccurrences = 0;
         let lastSymbol = '';
@@ -267,8 +285,9 @@ export class SlotMachine {
             }
         }
 
-        // TODO: Use a constant for this `2`:
-        return maxOccurrences > 2 ? maxOccurrences * (maxPrize / symbols.length) / reelCount : null;
+        const coins = this.coinMap[maxOccurrences];
+
+        return betAmount * coins;
     }
 
     handleResize() {
@@ -328,11 +347,21 @@ export class SlotMachine {
 
             // TODO: Should be e.button instead?
             if (e.which === 3) return;
+
+            if (target?.getAttribute('name') === 'bet') {
+                this.reset = true;
+                this.zoomOut();
+                return;
+            }
         }
 
-        const { currentReel } = this;
+        const { currentReel, reset } = this;
 
-        if (currentReel === null) {
+        if (currentReel === null && !reset) {
+            this.reset = true;
+            this.zoomOut();
+        } else if (currentReel === null) {
+            this.reset = false;
             this.start();
         } else {
             ++this.currentReel;
