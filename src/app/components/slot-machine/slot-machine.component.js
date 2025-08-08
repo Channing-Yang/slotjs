@@ -332,35 +332,36 @@ export class SlotMachine {
 
         // Keyboard events (above) will call this without passing down `e`:
 
-        if (e) {
-            const { target } = e;
-            const targetTagName = target.tagName;
-            const parentTagName = target.parentElement.tagName;
-
-            if (/^A|BUTTON$/.test(targetTagName) || /^A|BUTTON$/.test(parentTagName)) {
-                // TODO: This is only needed for links.
-
-                document.activeElement.blur();
-
-                return;
-            }
-
-            // TODO: Should be e.button instead?
-            if (e.which === 3) return;
-
-            if (target?.getAttribute('name') === 'bet') {
-                this.reset = true;
-                this.zoomOut();
-                return;
-            }
+        if (!e) {
+            return;
         }
+
+        this.zoomOut();
+
+        const { target } = e;
+        const targetTagName = target.tagName;
+        const parentTagName = target.parentElement.tagName;
+        const playButtonText = document.querySelector('.play-button > div');
+
+        if (!target?.classList?.contains('play-button')) {
+            return;
+        }
+
+        if (/^A|BUTTON$/.test(targetTagName) || /^A|BUTTON$/.test(parentTagName)) {
+            // TODO: This is only needed for links.
+
+            document.activeElement.blur();
+
+            return;
+        }
+
+        // TODO: Should be e.button instead?
+        if (e.which === 3) return;
 
         const { currentReel, reset } = this;
 
-        if (currentReel === null && !reset) {
-            this.reset = true;
-            this.zoomOut();
-        } else if (currentReel === null) {
+        if (currentReel === null) {
+            playButtonText.innerHTML = 'Stop';
             this.reset = false;
             this.start();
         } else {
@@ -369,6 +370,7 @@ export class SlotMachine {
             this.stopReel(currentReel);
 
             if (currentReel === this.reels.length - 1) {
+                playButtonText.innerHTML = 'Spin';
                 this.stop();
             }
         }

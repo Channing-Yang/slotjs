@@ -136,3 +136,44 @@
         font-size: 12px;
     }
 }
+
+#bet {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    > input {
+        padding: 5px;
+        font-size: 16px;
+        border: 2px solid #ccc;
+        border-radius: 6px;
+    }
+
+    > div:first-child {
+        margin-right: 20px;
+    }
+}
+
+.bet-control {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.play-button {
+    cursor: pointer;
+    border-right: 1px solid #f0f0f0;
+}
+
+li.play-button {
+    min-width: 100px;
+}
+
+div.play-button {  
+    width: 100%;  
+    text-align: center;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}

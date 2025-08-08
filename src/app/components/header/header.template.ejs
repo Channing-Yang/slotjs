@@ -1,11 +1,11 @@
 <header class="header__base">
     <div class="header__content">
-        <h1 class="header__title">
-            <a class="header__logoLink" href="">
-                <img class="header__logoImage" src="logo/slotjs-t-e-64.png" aria-hidden="true" />
-                <span class="header__logoText" id="title">SlotJS</span>
-            </a>
-        </h1>
+        <div class="header__prop bet-control">
+            <div id="bet">
+                <div>Bet</div>
+                <input type="number" name="bet" value="1" min="1" max="1000" oninput="enforceRange(this)">
+            </div>
+        </div>
 
         <ul class="header__state">
             <li class="header__prop" title="Coins">
@@ -19,6 +19,9 @@
             <li class="header__prop" title="Spins">
                 <span class="header__icon" role="img" aria-label="Spins">🎲</span>
                 <span class="header__value" id="spins">00000</span>
+            </li>
+            <li class="header__prop bet-control play-button">
+                <div class="play-button">Spin</div>
             </li>
         </ul>
     </div>

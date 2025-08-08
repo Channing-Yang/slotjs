@@ -107,7 +107,14 @@ export class SlotMachineReel {
         this.style.animation = `${ animationName } ${ animationDuration }ms ease-out forwards`;
         root.classList.add(SlotMachineReel.C_IS_STOP);
 
-        return (root.children[index * this.shadowCount] || root.children[0]).innerText;
+        const res = (root.children[index * this.shadowCount] || root.children[0]).innerText;
+
+        if (res !== '') {
+            return res;
+        }
+
+        const value = (root.children[index * this.shadowCount] || root.children[0])?.querySelector('div')?.getAttribute('data-value');
+        return value;
     }
 
 }
