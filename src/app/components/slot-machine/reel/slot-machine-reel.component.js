@@ -31,6 +31,7 @@ export class SlotMachineReel {
     // State:
     angle = 0;
     stopAt = 0;
+    shuffledSymbols = [];
 
     constructor(index, alpha, symbols, diameter) {
         this.index = index;
@@ -61,6 +62,7 @@ export class SlotMachineReel {
         const beta = 1 / shadowCount;
 
         shuffle(symbols);
+        this.shuffledSymbols = [...symbols];
 
         symbols.forEach((symbol, symbolIndex) => {
             const cellFigure = createElement(C_FIGURE, symbol);

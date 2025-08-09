@@ -62,7 +62,6 @@ export class SlotMachine {
     isPaused = false;
     keydownTimeoutID = null;
     keydownLastCalled = 0;
-    reset = false;
     coinMap = {
         0: 1,
         2: 5,
@@ -358,11 +357,10 @@ export class SlotMachine {
         // TODO: Should be e.button instead?
         if (e.which === 3) return;
 
-        const { currentReel, reset } = this;
+        const { currentReel } = this;
 
         if (currentReel === null) {
             playButtonText.innerHTML = 'Stop';
-            this.reset = false;
             this.start();
         } else {
             ++this.currentReel;

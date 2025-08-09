@@ -81,29 +81,32 @@
     }
 
     &__display {
-        --displayShadowColor: rgba(0, 0, 0, 0.125);
+        --displayShadowColor: rgba(0, 0, 0, 0.5);
 
-        position: absolute;
-        top: 50%;
-        left: 0;
-        width: var(--displaySize);
-        height: var(--reelSize);
-        transform: translate(0, -50%);
-        transition: box-shadow linear 0.25s, background linear 0.25s;
+        border: 10px solid #9c9c9c;
         border-radius: 128px;
         box-shadow: 0 0 calc(var(--shadowWeight) * var(--reelSize)) 0 var(--displayShadowColor);
+        height: var(--reelSize);
+        left: 0;
         mix-blend-mode: color;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-47.5%) translateX(-2%);    
+        transition: box-shadow .25s linear,background .25s linear;
+        width: var(--displaySize);
 
         &.is-win {
             --displayShadowColor: rgba(127, 160, 0, 0.5);
 
-            background: rgb(127, 160, 0);
+            border: 10px solid rgba(127, 160, 0, 1);
+            background: rgba(127, 160, 0, 0.35);
         }
 
         &.is-fail {
-            --displayShadowColor: rgba(255, 0, 0, 0.25);
+            --displayShadowColor: rgba(255, 0, 0, 0.5);
 
-            background: rgb(255, 0, 0);
+            border: 10px solid rgba(255, 0, 0, 1);
+            background: rgba(255, 0, 0, 0.35);
         }
     }
 }
