@@ -25,7 +25,7 @@ export const SYMBOLS_FOOD = [
 ];
 
 export const PEPPER_BRANDS = [
-    'logo/icon1.png', 'logo/icon2.png', 'logo/icon3.png', 'logo/icon4.png', 'logo/icon5.png', 'logo/icon6.png',
+    'logo/icon1.png', 'logo/icon2.png', 'logo/icon3.png', 'logo/icon4.png', 'logo/icon5.png', 'logo/icon6.png', 'logo/icon7.png',
 ];
 
 export const ALL_SYMBOLS = [
