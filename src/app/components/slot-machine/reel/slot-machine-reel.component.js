@@ -94,8 +94,8 @@ export class SlotMachineReel {
     stop(speed, deltaAlpha) {
         const { alpha, root } = this;
         const angle = (360 - this.angle - deltaAlpha) % 360;
-        // const index = Math.ceil(angle / alpha);
-        const index = this.shuffledSymbols.findIndex((item) => item === 'logo/icon1.png');
+        const index = Math.ceil(angle / alpha);
+        // const index = this.shuffledSymbols.findIndex((item) => item === 'logo/icon1.png');
         const stopAt = index * alpha;
         const animationName = `stop-${ this.index }`;
         const animationDuration = stopAtAnimation(
