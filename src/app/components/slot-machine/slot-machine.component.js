@@ -45,6 +45,7 @@ export class SlotMachine {
     reelsContainer = document.querySelector(SlotMachine.S_REELS_CONTAINER);
     display = document.querySelector(SlotMachine.S_DISPLAY);
     reels = [];
+    getCoins;
 
     // Config:
     blipFading;
@@ -77,9 +78,10 @@ export class SlotMachine {
         reelCount = 3,
         symbols = SYMBOLS_CLASSIC,
         isPaused = false,
-        speed = -0.552, // TODO: Make enum and match sounds too.
+        speed = 4, // TODO: Make enum and match sounds too.
+        getCoins = null,
     ) {
-        this.init(wrapper, handleUseCoin, handleGetPrice, reelCount, symbols, speed);
+        this.init(wrapper, handleUseCoin, handleGetPrice, reelCount, symbols, speed, getCoins);
 
         window.onresize = this.handleResize.bind(this);
         document.onkeydown = this.handleKeyDown.bind(this);
@@ -100,6 +102,7 @@ export class SlotMachine {
         reelCount,
         symbols,
         speed,
+        getCoins,
     ) {
         this.wrapper = wrapper;
         this.handleUseCoin = handleUseCoin;
@@ -108,6 +111,7 @@ export class SlotMachine {
         this.symbols = symbols;
         this.speed = speed;
         this.blipFading = 1 / reelCount;
+        this.getCoins = getCoins;
 
         const alpha = this.alpha = 360 / symbols.length;
         const shuffledSymbols = [...symbols];
@@ -132,6 +136,16 @@ export class SlotMachine {
         // Additional reel at the end that acts as a "cover" in case we set a background color on them and we only want
         // to see a ring even in the inner-most one, instead of a filled circle:
         reelsContainer.appendChild(new SlotMachineReel(reelCount).root);
+
+        document.querySelector('input[name="bet"]').addEventListener('input', (e) => {
+            const betAmount = parseInt(e.target?.value ?? 0, 10);
+
+            if (betAmount > this.getCoins()) {
+                this.togglePlayButton(true);
+            } else {
+                this.togglePlayButton(false);
+            }
+        });
     }
 
     start() {
@@ -324,6 +338,19 @@ export class SlotMachine {
         this.keydownLastCalled = 0;
     }
 
+
+    static togglePlayButton(notAllow) {
+        const target = document.querySelectorAll('.play-button');
+
+        Array.from(target).forEach((item) => {
+            if (notAllow) {
+                item.classList.add('not-allowd');
+            } else {
+                item.classList.remove('not-allowd');
+            }
+        });
+    }
+
     handleClick(e = null) {
         window.clearTimeout(this.keydownTimeoutID);
 
@@ -357,12 +384,17 @@ export class SlotMachine {
         // TODO: Should be e.button instead?
         if (e.which === 3) return;
 
+        const coins = this.getCoins();
+        const bet = document.querySelector('input[name="bet"]');
+        const betAmount = parseInt(bet?.value ?? 0, 10);
+        const validStart = coins > 0 && betAmount <= coins;
+
         const { currentReel } = this;
 
-        if (currentReel === null) {
+        if (currentReel === null && validStart) {
             playButtonText.innerHTML = 'Stop';
             this.start();
-        } else {
+        } else if (currentReel !== null) {
             ++this.currentReel;
 
             this.stopReel(currentReel);

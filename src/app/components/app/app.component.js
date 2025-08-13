@@ -83,6 +83,7 @@ export class App {
         this.handleModalToggle = this.handleModalToggle.bind(this);
         this.handleUseCoin = this.handleUseCoin.bind(this);
         this.handleGetPrice = this.handleGetPrice.bind(this);
+        this.getCoins = this.getCoins.bind(this);
 
         let focusActive = false;
 
@@ -246,6 +247,8 @@ export class App {
             5,
             SYMBOLS_RANDOM,
             isFirstTime,
+            undefined,
+            this.getCoins,
         );
 
         // Init/render pay table and pay table modal, which is always closed in the beginning:
@@ -282,6 +285,10 @@ export class App {
         } else {
             this.slotMachine.resume();
         }
+    }
+
+    getCoins() {
+        return this.coins;
     }
 
 }
