@@ -257,6 +257,7 @@ export class SlotMachine {
         const userInfo = await getUserInfo();
         const validStart = (userInfo?.available_play_chances ?? 0) > 0;
         togglePlayButton(!validStart);
+        dataInsert(userInfo);
         this.chances = userInfo?.available_play_chances ?? 0;
     }
 
