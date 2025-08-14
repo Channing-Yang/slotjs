@@ -78,7 +78,7 @@ export class SlotMachine {
         reelCount = 3,
         symbols = SYMBOLS_CLASSIC,
         isPaused = false,
-        speed = 4, // TODO: Make enum and match sounds too.
+        speed = -0.552, // TODO: Make enum and match sounds too.
         getCoins = null,
     ) {
         this.init(wrapper, handleUseCoin, handleGetPrice, reelCount, symbols, speed, getCoins);

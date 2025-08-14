@@ -247,7 +247,7 @@ export class App {
             5,
             SYMBOLS_RANDOM,
             isFirstTime,
-            undefined,
+            1,
             this.getCoins,
         );
 

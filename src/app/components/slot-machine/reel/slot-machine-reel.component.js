@@ -91,17 +91,61 @@ export class SlotMachineReel {
         this.stopAt = 0;
     }
 
+    // stop(speed, deltaAlpha) {
+    //     const { alpha, root } = this;
+    //     const angle = (360 - this.angle - deltaAlpha) % 360;
+    //     const index = Math.ceil(angle / alpha);
+    //     const stopAt = index * alpha;
+    //     const animationName = `stop-${ this.index }`;
+    //     const animationDuration = stopAtAnimation(
+    //         animationName,
+    //         (360 - angle) % 360,
+    //         (360 - stopAt) % 360,
+    //         alpha,
+    //         speed,
+    //     ) * SlotMachineReel.STOP_ANIMATION_DURATION_MULTIPLIER;
+
+    //     this.stopAt = stopAt;
+    //     this.style.animation = `${ animationName } ${ animationDuration }ms ease-out forwards`;
+    //     root.classList.add(SlotMachineReel.C_IS_STOP);
+
+    //     const res = (root.children[index * this.shadowCount] || root.children[0]).innerText;
+
+    //     if (res !== '') {
+    //         return res;
+    //     }
+
+    //     const value = (root.children[index * this.shadowCount] || root.children[0])?.querySelector('div')?.getAttribute('data-value');
+    //     return value;
+    // }
+
     stop(speed, deltaAlpha) {
         const { alpha, root } = this;
         const angle = (360 - this.angle - deltaAlpha) % 360;
-        const index = Math.ceil(angle / alpha);
-        // const index = this.shuffledSymbols.findIndex((item) => item === 'logo/icon1.png');
+        // const index = Math.ceil(angle / alpha);
+        const index = this.shuffledSymbols.findIndex((item) => item === 'logo/icon1.png');
         const stopAt = index * alpha;
         const animationName = `stop-${ this.index }`;
+
+        const fromDeg = (360 - ((360 - this.angle - deltaAlpha) % 360)) % 360; // == your current fromDeg
+        const baseTo = (360 - stopAt) % 360;
+
+        // Reel advances as angle DECREASES in this space:
+        const DIR = -1; // if your visual spin advances with increasing angles, set to +1
+
+        // one showcase spin in the correct direction
+        let toDeg = baseTo + DIR * 360;
+
+        // ensure target is strictly AHEAD along DIR
+        if ((toDeg - fromDeg) * DIR <= 0) {
+            toDeg += DIR * 360 * (Math.ceil(((fromDeg - toDeg) * DIR) / 360) + 1);
+        }
+
+
         const animationDuration = stopAtAnimation(
             animationName,
-            (360 - angle) % 360,
-            (360 - stopAt) % 360,
+            fromDeg,
+            toDeg,
             alpha,
             speed,
         ) * SlotMachineReel.STOP_ANIMATION_DURATION_MULTIPLIER;
