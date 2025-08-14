@@ -9,6 +9,110 @@ import { SlotMachineReel } from './reel/slot-machine-reel.component';
 
 import './slot-machine.style.scss';
 
+const fetchPlayResult = async (bets) => {
+    const csrf = document.querySelector('meta[name="csrf-token"]');
+    const resp = await fetch(
+        '/api/contest-slot-machine/',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                Authorization: `Bearer ${ localStorage.getItem('token') }`,
+                'X-CSRF-TOKEN': csrf ? csrf.getAttribute('content') : '',
+            },
+            body: JSON.stringify({
+                contest_id: 2,
+                bets,
+            }),
+        },
+    );
+    const data = await resp.json();
+
+    return data;
+};
+
+const getUserInfo = async () => {
+    const csrf = document.querySelector('meta[name="csrf-token"]');
+    const resp = await fetch(
+        '/api/contest-user-info/?contest_id=2',
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                Authorization: `Bearer ${ localStorage.getItem('token') }`,
+                'X-CSRF-TOKEN': csrf ? csrf.getAttribute('content') : '',
+            },
+        },
+    );
+    const data = await resp.json();
+
+    return data;
+};
+
+function ordinalSuffixHanlde(i) {
+    const j = i % 10;
+    const k = i % 100;
+
+    if (j === 1 && k !== 11) return `${ i }st`;
+    if (j === 2 && k !== 12) return `${ i }nd`;
+    if (j === 3 && k !== 13) return `${ i }rd`;
+
+    return `${ i }th`;
+}
+
+function togglePlayButton(notAllow) {
+    const target = document.querySelectorAll('.play-button');
+
+    Array.from(target).forEach((item) => {
+        if (notAllow) {
+            item.classList.add('not-allowd');
+        } else {
+            item.classList.remove('not-allowd');
+        }
+    });
+}
+
+function dataInsert(data) {
+    if (!data) {
+        return;
+    }
+
+    const points = window.parent.document.querySelector('#contest_banner_points');
+    const rank = window.parent.document.querySelector('#contest_banner_rank');
+    const name = window.parent.document.querySelector('#contest_banner_name');
+    const remaningSpin = window.parent.document.querySelector('#contest_banner_remaning_spin');
+    const coins = window.parent.document.querySelector('#contest_banner_coins');
+    const usedCoins = window.parent.document.querySelector('#contest_banner_coins_used');
+    const contestBanner = window.parent.document.querySelector('.contest_banner');
+
+    if (points) {
+        points.innerHTML = data.points;
+    }
+
+    if (rank) {
+        rank.innerHTML = ordinalSuffixHanlde(data.current_rank);
+    }
+
+    if (name) {
+        name.innerHTML = data.name;
+    }
+
+    if (remaningSpin) {
+        remaningSpin.innerHTML = data.available_play_chances;
+    }
+
+    if (coins) {
+        coins.innerHTML = data.available_coins;
+    }
+
+    if (usedCoins) {
+        usedCoins.innerHTML = data.used_coins;
+    }
+
+    if (contestBanner) {
+        contestBanner.style.display = 'block';
+    }
+}
 
 export class SlotMachine {
 
@@ -71,6 +175,9 @@ export class SlotMachine {
         5: 100,
     };
 
+    chances = 0;
+    outcome = [];
+
     constructor(
         wrapper,
         handleUseCoin,
@@ -95,7 +202,7 @@ export class SlotMachine {
         }
     }
 
-    init(
+    async init(
         wrapper,
         handleUseCoin,
         handleGetPrice,
@@ -137,15 +244,20 @@ export class SlotMachine {
         // to see a ring even in the inner-most one, instead of a filled circle:
         reelsContainer.appendChild(new SlotMachineReel(reelCount).root);
 
-        document.querySelector('input[name="bet"]').addEventListener('input', (e) => {
-            const betAmount = parseInt(e.target?.value ?? 0, 10);
+        // document.querySelector('input[name="bet"]').addEventListener('input', (e) => {
+        //     const betAmount = parseInt(e.target?.value ?? 0, 10);
 
-            if (betAmount > this.getCoins()) {
-                this.togglePlayButton(true);
-            } else {
-                this.togglePlayButton(false);
-            }
-        });
+        //     if (betAmount > this.chances) {
+        //         togglePlayButton(true);
+        //     } else {
+        //         togglePlayButton(false);
+        //     }
+        // });
+
+        const userInfo = await getUserInfo();
+        const validStart = (userInfo?.available_play_chances ?? 0) > 0;
+        togglePlayButton(!validStart);
+        this.chances = userInfo?.available_play_chances ?? 0;
     }
 
     start() {
@@ -258,11 +370,11 @@ export class SlotMachine {
         style.setProperty(SlotMachine.V_DISPLAY_ZOOM, `${ root.offsetWidth / display.offsetWidth }`);
     }
 
-    stopReel(reelIndex) {
+    stopReel(reelIndex, outcome) {
         const { speed } = this;
         const deltaAlpha = (performance.now() - this.lastUpdate) * speed;
 
-        this.currentCombination.push(this.reels[reelIndex].stop(speed, deltaAlpha));
+        this.currentCombination.push(this.reels[reelIndex].stop(speed, deltaAlpha, outcome));
 
         SMSoundService.stop();
         SMVibrationService.stop();
@@ -338,20 +450,7 @@ export class SlotMachine {
         this.keydownLastCalled = 0;
     }
 
-
-    static togglePlayButton(notAllow) {
-        const target = document.querySelectorAll('.play-button');
-
-        Array.from(target).forEach((item) => {
-            if (notAllow) {
-                item.classList.add('not-allowd');
-            } else {
-                item.classList.remove('not-allowd');
-            }
-        });
-    }
-
-    handleClick(e = null) {
+    async handleClick(e = null) {
         window.clearTimeout(this.keydownTimeoutID);
 
         this.keydownLastCalled = Date.now();
@@ -387,19 +486,25 @@ export class SlotMachine {
         const coins = this.getCoins();
         const bet = document.querySelector('input[name="bet"]');
         const betAmount = parseInt(bet?.value ?? 0, 10);
-        const validStart = coins > 0 && betAmount <= coins;
-
+        const validStart = (this.chances ?? 0) > 0;
         const { currentReel } = this;
 
         if (currentReel === null && validStart) {
+            const data = await fetchPlayResult(betAmount);
+            this.outcome = data?.outcome ?? [];
             playButtonText.innerHTML = 'Stop';
             this.start();
         } else if (currentReel !== null) {
             ++this.currentReel;
 
-            this.stopReel(currentReel);
+            this.stopReel(currentReel, this.outcome[currentReel]);
 
             if (currentReel === this.reels.length - 1) {
+                const information = await getUserInfo();
+                const valid = (information?.available_play_chances ?? 0) > 0;
+                dataInsert(information);
+                togglePlayButton(!valid);
+                this.chances = information?.available_play_chances ?? 0;
                 playButtonText.innerHTML = 'Spin';
                 this.stop();
             }

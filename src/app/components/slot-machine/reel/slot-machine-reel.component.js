@@ -119,11 +119,11 @@ export class SlotMachineReel {
     //     return value;
     // }
 
-    stop(speed, deltaAlpha) {
+    stop(speed, deltaAlpha, outcome) {
         const { alpha, root } = this;
         const angle = (360 - this.angle - deltaAlpha) % 360;
         // const index = Math.ceil(angle / alpha);
-        const index = this.shuffledSymbols.findIndex((item) => item === 'logo/icon1.png');
+        const index = this.shuffledSymbols.findIndex((item) => item === `logo/icon${ outcome }.png`);
         const stopAt = index * alpha;
         const animationName = `stop-${ this.index }`;
 
@@ -134,7 +134,7 @@ export class SlotMachineReel {
         const DIR = -1; // if your visual spin advances with increasing angles, set to +1
 
         // one showcase spin in the correct direction
-        let toDeg = baseTo + DIR * 360;
+        let toDeg = baseTo + (DIR * 360);
 
         // ensure target is strictly AHEAD along DIR
         if ((toDeg - fromDeg) * DIR <= 0) {
