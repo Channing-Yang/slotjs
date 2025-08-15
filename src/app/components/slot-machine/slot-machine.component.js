@@ -10,7 +10,7 @@ import { SlotMachineReel } from './reel/slot-machine-reel.component';
 import './slot-machine.style.scss';
 
 const fetchPlayResult = async (bets) => {
-    const csrf = document.querySelector('meta[name="csrf-token"]');
+    const csrf = window.parent.document.querySelector('meta[name="csrf-token"]');
     const resp = await fetch(
         '/api/contest-slot-machine/',
         {
@@ -32,7 +32,7 @@ const fetchPlayResult = async (bets) => {
 };
 
 const getUserInfo = async () => {
-    const csrf = document.querySelector('meta[name="csrf-token"]');
+    const csrf = window.parent.document.querySelector('meta[name="csrf-token"]');
     const resp = await fetch(
         '/api/contest-user-info/?contest_id=2',
         {
