@@ -353,6 +353,11 @@ export class SlotMachine {
         clearTimeout(this.zoomTransitionTimeoutID);
 
         const { root } = this;
+        const target = document.querySelector('#play-section');
+
+        if (!out) {
+            target.classList.add('hide');
+        }
 
         root.style.transition = SlotMachine.ZOOM_TRANSITION;
         root.classList[out ? 'remove' : 'add'](SlotMachine.C_HAS_ZOOM);
@@ -360,6 +365,11 @@ export class SlotMachine {
         // We do this as transition end will bubble up and fire a lot of times, not only for this transition:
         this.zoomTransitionTimeoutID = setTimeout(() => {
             root.style.transition = '';
+
+            if (out) {
+                target.classList.remove('hide');
+            }
+
         }, SlotMachine.ZOOM_TRANSITION_DURATION);
     }
 
@@ -480,7 +490,7 @@ export class SlotMachine {
         const parentTagName = target.parentElement.tagName;
         const playButtonText = document.querySelector('.play-button > div');
 
-        if (!target?.classList?.contains('play-button')) {
+        if (!target?.classList.contains('play-button')) {
             return;
         }
 
@@ -506,7 +516,7 @@ export class SlotMachine {
             this.outcome = data?.outcome ?? [];
             playButtonText.innerHTML = 'Stop';
             this.start();
-            changeUserInfo(-1);
+            changeUserInfo(-betAmount);
         } else if (currentReel !== null) {
             ++this.currentReel;
 
