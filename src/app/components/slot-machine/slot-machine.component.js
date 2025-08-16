@@ -124,6 +124,31 @@ function changeUserInfo(amount) {
     }
 }
 
+function generateIconSentence(matches, payout) {
+    let text = '';
+    let title = '';
+    let icon = '';
+
+    if (Array.isArray(matches) && matches.length === 0) {
+        text = 'No consecutive icons';
+        title = 'Sorry!';
+        icon = 'error';
+    } else if (typeof matches === 'object' && !Array.isArray(matches)) {
+        const items = [];
+
+        Object.entries(matches).forEach(([key, count]) => {
+            items.push(...Array(count).fill(key));
+        });
+
+        // Join with commas and add exclamation
+        text = `${ items.join(' and ') } consecutive icons! Congratulations you earned ${ payout } coin(s)`;
+        title = 'Congratulations!';
+        icon = 'success';
+    }
+
+    window.parent.swalAlert?.({ text, title, icon });
+}
+
 export class SlotMachine {
 
     // CSS classes:
@@ -187,6 +212,8 @@ export class SlotMachine {
 
     chances = 0;
     outcome = [];
+    matches = [];
+    payout = 0;
 
     constructor(
         wrapper,
@@ -514,7 +541,9 @@ export class SlotMachine {
         if (currentReel === null && validStart) {
             const data = await fetchPlayResult(betAmount);
             this.outcome = data?.outcome ?? [];
-            playButtonText.innerHTML = 'Stop';
+            this.matches = data?.matches ?? [];
+            this.payout = data?.payout ?? 0;
+            playButtonText.innerHTML = 'STOP';
             this.start();
             changeUserInfo(-betAmount);
         } else if (currentReel !== null) {
@@ -527,8 +556,9 @@ export class SlotMachine {
                 const valid = (information?.available_play_chances ?? 0) > 0;
                 dataInsert(information);
                 togglePlayButton(!valid);
+                generateIconSentence(this.matches, this.payout);
                 this.chances = information?.available_play_chances ?? 0;
-                playButtonText.innerHTML = 'Spin';
+                playButtonText.innerHTML = 'SPIN';
                 this.stop();
             }
         }
