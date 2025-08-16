@@ -172,7 +172,7 @@ export class App {
         localStorage.spins = ++this.spins;
         localStorage.lastSpin = this.lastSpin = Date.now();
 
-        this.refreshGameInfo();
+        // this.refreshGameInfo();
     }
 
     handleGetPrice(jackpotPercentage) {
@@ -181,7 +181,7 @@ export class App {
         // localStorage.jackpot = this.jackpot = Math.max(this.jackpot - price, 0) || 1000;
         localStorage.coins = this.coins += jackpotPercentage;
 
-        this.refreshGameInfo();
+        // this.refreshGameInfo();
     }
 
     refreshGameInfo() {
@@ -197,7 +197,7 @@ export class App {
         const { isFirstTime } = this;
 
         // Init/render the game info at the top:
-        this.refreshGameInfo();
+        // this.refreshGameInfo();
 
         if (IS_DESKTOP) {
             // TODO: Move to toggle button?
@@ -205,6 +205,8 @@ export class App {
             // TODO: Move to instructions modal?
             document.querySelector(App.S_VIBRATION_INSTRUCTIONS).setAttribute('hidden', true);
         }
+
+        document.querySelector(App.S_VIBRATION_INSTRUCTIONS).setAttribute('hidden', true);
 
         this.initToggleButtons();
 
@@ -230,14 +232,14 @@ export class App {
         // TODO: Pass params as options, except for root selector or some of the basic ones...:
 
         // Init/render instructions modal, which might be open straight away:
-        this.instructionsModal = new Modal(
-            App.S_INSTRUCTIONS_MODAL,
-            App.S_INSTRUCTIONS_MODAL_BUTTON,
-            'instructions',
-            isFirstTime,
-            isFirstTime,
-            this.handleModalToggle,
-        );
+        // this.instructionsModal = new Modal(
+        //     App.S_INSTRUCTIONS_MODAL,
+        //     App.S_INSTRUCTIONS_MODAL_BUTTON,
+        //     'instructions',
+        //     isFirstTime,
+        //     isFirstTime,
+        //     this.handleModalToggle,
+        // );
 
         // Init/render slot machine symbols:
         this.slotMachine = new SlotMachine(
@@ -247,7 +249,7 @@ export class App {
             5,
             SYMBOLS_RANDOM,
             isFirstTime,
-            1,
+            3,
             this.getCoins,
         );
 

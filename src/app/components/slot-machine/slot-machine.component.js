@@ -114,6 +114,16 @@ function dataInsert(data) {
     }
 }
 
+function changeUserInfo(amount) {
+    const remaningSpin = window.parent.document.querySelector('#contest_banner_remaning_spin');
+    const remainingNum = parseInt(remaningSpin.innerHTML, 10);
+
+    if (!Number.isNaN(remainingNum)) {
+        const newRemaining = remainingNum + amount;
+        remaningSpin.innerHTML = newRemaining;
+    }
+}
+
 export class SlotMachine {
 
     // CSS classes:
@@ -289,18 +299,19 @@ export class SlotMachine {
         bet.disabled = false;
 
         this.currentReel = null;
-        this.zoomIn();
 
         if (currentPrize) {
             SMSoundService.win();
 
             this.display.classList.add(SlotMachine.C_IS_WIN);
+            this.zoomIn();
 
             this.handleGetPrice(currentPrize);
         } else {
             SMSoundService.unlucky();
 
             this.display.classList.add(SlotMachine.C_IS_FAIL);
+            this.zoomIn();
         }
     }
 
@@ -487,7 +498,7 @@ export class SlotMachine {
         const coins = this.getCoins();
         const bet = document.querySelector('input[name="bet"]');
         const betAmount = parseInt(bet?.value ?? 0, 10);
-        const validStart = (this.chances ?? 0) > 0;
+        const validStart = (this.chances ?? 0) > 0 && this.chances >= betAmount;
         const { currentReel } = this;
 
         if (currentReel === null && validStart) {
@@ -495,6 +506,7 @@ export class SlotMachine {
             this.outcome = data?.outcome ?? [];
             playButtonText.innerHTML = 'Stop';
             this.start();
+            changeUserInfo(-1);
         } else if (currentReel !== null) {
             ++this.currentReel;
 

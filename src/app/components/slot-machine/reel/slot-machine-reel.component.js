@@ -17,7 +17,7 @@ export class SlotMachineReel {
     static V_INDEX = '--index';
 
     // Misc.:
-    static STOP_ANIMATION_DURATION_MULTIPLIER = 5;
+    static STOP_ANIMATION_DURATION_MULTIPLIER = 1;
 
     // Elements:
     root;
@@ -122,7 +122,6 @@ export class SlotMachineReel {
     stop(speed, deltaAlpha, outcome) {
         const { alpha, root } = this;
         const angle = (360 - this.angle - deltaAlpha) % 360;
-        // const index = Math.ceil(angle / alpha);
         const index = this.shuffledSymbols.findIndex((item) => item === `logo/icon${ outcome }.png`);
         const stopAt = index * alpha;
         const animationName = `stop-${ this.index }`;
