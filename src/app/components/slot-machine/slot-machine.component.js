@@ -121,6 +121,7 @@ function changeUserInfo(amount) {
     if (!Number.isNaN(remainingNum)) {
         const newRemaining = remainingNum + amount;
         remaningSpin.innerHTML = newRemaining;
+        setMaxBet(newRemaining);
     }
 }
 
@@ -147,6 +148,11 @@ function generateIconSentence(matches, payout) {
     }
 
     window.parent.swalAlert?.({ text, title, icon });
+}
+
+function setMaxBet(value) {
+    const bet = document.querySelector('input[name="bet"]');
+    bet.setAttribute('max', value);
 }
 
 export class SlotMachine {
@@ -295,6 +301,7 @@ export class SlotMachine {
         const validStart = (userInfo?.available_play_chances ?? 0) > 0;
         togglePlayButton(!validStart);
         dataInsert(userInfo);
+        setMaxBet(userInfo?.available_play_chances ?? 0);
         this.chances = userInfo?.available_play_chances ?? 0;
     }
 
@@ -557,6 +564,7 @@ export class SlotMachine {
                 dataInsert(information);
                 togglePlayButton(!valid);
                 generateIconSentence(this.matches, this.payout);
+                setMaxBet(information?.available_play_chances ?? 0);
                 this.chances = information?.available_play_chances ?? 0;
                 playButtonText.innerHTML = 'SPIN';
                 this.stop();

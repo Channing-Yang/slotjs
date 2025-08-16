@@ -98,7 +98,7 @@
         <div id="play-section">
             <div class="bet-section">
                 <div>Bet</div>
-                <input id="bet" type="number" name="bet" value="1" min="1" />
+                <input id="bet" type="number" name="bet" value="1" min="1" oninput="enforceRange(this)"/>
             </div>
             <div class="play-button">
                 <div class="play-button">SPIN</div>
@@ -138,8 +138,10 @@
 <script>
     function enforceRange(input) {
         const val = parseInt(input.value, 10);
-        if (val > 1000) {
-            input.value = 1000;
+        const maxValue = parseInt(input.getAttribute('max'), 10);
+
+        if (val > maxValue) {
+            input.value = maxValue;
         } else if (val < 1) {
             input.value = 1;
         }
