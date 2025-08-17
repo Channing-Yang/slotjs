@@ -212,22 +212,22 @@ export class App {
 
         const playButtonElement = document.querySelector(App.S_PLAY);
 
-        if (isFirstTime) {
+        // if (isFirstTime) {
 
-            playButtonElement.onclick = () => {
-                this.isFirstTime = localStorage.firstTime = false;
+        //     playButtonElement.onclick = () => {
+        //         this.isFirstTime = localStorage.firstTime = false;
 
-                // playButtonElement.setAttribute('hidden', true);
+        //         playButtonElement.setAttribute('hidden', true);
 
-                this.instructionsModal?.close();
+        //         this.instructionsModal?.close();
 
-                // document.activeElement.blur();
+        //         document.activeElement.blur();
 
-                this.slotMachine.start();
-            };
-        } else {
-            // playButtonElement.setAttribute('hidden', true);
-        }
+        //         this.slotMachine.start();
+        //     };
+        // } else {
+        //     playButtonElement.setAttribute('hidden', true);
+        // }
 
         // TODO: Pass params as options, except for root selector or some of the basic ones...:
 
@@ -248,7 +248,7 @@ export class App {
             this.handleGetPrice,
             5,
             SYMBOLS_RANDOM,
-            isFirstTime,
+            false,
             3,
             this.getCoins,
         );
