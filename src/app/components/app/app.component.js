@@ -219,7 +219,7 @@ export class App {
 
                 // playButtonElement.setAttribute('hidden', true);
 
-                this.instructionsModal.close();
+                this.instructionsModal?.close();
 
                 // document.activeElement.blur();
 
