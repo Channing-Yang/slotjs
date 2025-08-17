@@ -11,7 +11,8 @@
         width: var(--wrapperSize);
         height: var(--wrapperSize);
         box-sizing: border-box;
-        pointer-events: none;
+
+        // pointer-events: none;
         transform-origin: left center;
         will-change: transform;
 
@@ -43,7 +44,7 @@
 
         &:first-child,
         &:last-child {
-            box-shadow: none;
+            box-shadow: 0 0 calc(var(--shadowWeight) * var(--reelSize)) 0 rgba(0,0,0,.125);
         }
     }
 

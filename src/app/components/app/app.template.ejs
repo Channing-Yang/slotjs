@@ -94,17 +94,17 @@
             <!-- <div class="sm__display sm__display--background"></div> -->
             <div class="sm__reelsContainer"></div>
             <div class="sm__display"></div>
+            <div id="play-section">
+                <div class="bet-section">
+                    <div>BET</div>
+                    <input id="bet" type="number" name="bet" value="1" min="1" oninput="enforceRange(this)"/>
+                </div>
+                <div class="play-button">
+                    <div class="play-button">SPIN</div>
+                </div>
+                <div class="how-to-play" onclick="window.parent.showGameRule()"><div>How to play</div></div>
+            </div>
         </section>
-        <div id="play-section">
-            <div class="bet-section">
-                <div>Bet</div>
-                <input id="bet" type="number" name="bet" value="1" min="1" oninput="enforceRange(this)"/>
-            </div>
-            <div class="play-button">
-                <div class="play-button">SPIN</div>
-            </div>
-            <div class="how-to-play" onclick="window.parent.showGameRule()"><div>How to play</div></div>
-        </div>
     </main>
 
     <div class="app__coverLeft"></div>

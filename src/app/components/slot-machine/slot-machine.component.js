@@ -387,11 +387,6 @@ export class SlotMachine {
         clearTimeout(this.zoomTransitionTimeoutID);
 
         const { root } = this;
-        const target = document.querySelector('#play-section');
-
-        if (!out) {
-            target.classList.add('hide');
-        }
 
         root.style.transition = SlotMachine.ZOOM_TRANSITION;
         root.classList[out ? 'remove' : 'add'](SlotMachine.C_HAS_ZOOM);
@@ -399,11 +394,6 @@ export class SlotMachine {
         // We do this as transition end will bubble up and fire a lot of times, not only for this transition:
         this.zoomTransitionTimeoutID = setTimeout(() => {
             root.style.transition = '';
-
-            if (out) {
-                target.classList.remove('hide');
-            }
-
         }, SlotMachine.ZOOM_TRANSITION_DURATION);
     }
 

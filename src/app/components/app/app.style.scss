@@ -50,11 +50,12 @@
 
 #play-section {
     color: black;
-    width: 200px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    width: 20%;
+    font-size: 12px;
 
     .bet-section {
         display: flex;
@@ -66,23 +67,21 @@
     input[name='bet'] {
         border: 2px solid #a6a6a6;
         border-radius: 6px;
-        font-size: 16px;
-        padding: 5px;
-        flex: 1 1 0;
-        min-width: 0;
-        margin-left: 5px;
+        padding: 8px;
+        font-family: 'Press Start\ 2P', monospace;
+        width: 100%;
+        margin-left: 10px;
     }
 
     > div.play-button {
         border: 2px solid #a6a6a6;
-        font-size: 16px;
         padding: 5px;
         display: flex;
         justify-content: center;
         align-items: center;
         cursor: pointer;
         border-radius: 20px;
-        height: 30px;
+        height: 2vh;
         background-color: #e9e9ed;
     }
 
@@ -90,9 +89,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-top: 45px;
         text-decoration: underline;
-        font-size: 14px;
+        font-size: 8px;
+        margin-top: 3vh;
         cursor: pointer;
     }
 }
