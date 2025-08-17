@@ -44,7 +44,7 @@ export class App {
     static S_INSTRUCTIONS_MODAL_BUTTON = '#toggleInstructions';
     static S_PAY_TABLE_MODAL = '#payTableModal';
     static S_PAY_TABLE_MODAL_BUTTON = '#togglePayTable';
-    static S_PLAY = '#playButton';
+    static S_PLAY = '#play-section > .play-button';
 
     // Misc.:
     static ONE_DAY = 1000 * 60 * 60 * 24;
@@ -217,16 +217,16 @@ export class App {
             playButtonElement.onclick = () => {
                 this.isFirstTime = localStorage.firstTime = false;
 
-                playButtonElement.setAttribute('hidden', true);
+                // playButtonElement.setAttribute('hidden', true);
 
                 this.instructionsModal.close();
 
-                document.activeElement.blur();
+                // document.activeElement.blur();
 
                 this.slotMachine.start();
             };
         } else {
-            playButtonElement.setAttribute('hidden', true);
+            // playButtonElement.setAttribute('hidden', true);
         }
 
         // TODO: Pass params as options, except for root selector or some of the basic ones...:
