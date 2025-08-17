@@ -125,7 +125,7 @@ function changeUserInfo(amount) {
     }
 }
 
-function generateIconSentence(matches, payout) {
+function generateIconSentence(matches, payout, callback) {
     let text = '';
     let title = '';
     let icon = '';
@@ -147,7 +147,7 @@ function generateIconSentence(matches, payout) {
         icon = 'success';
     }
 
-    window.parent.swalAlert?.({ text, title, icon });
+    window.parent.swalAlert?.({ text, title, icon, callback });
 }
 
 function setMaxBet(value) {
@@ -553,11 +553,11 @@ export class SlotMachine {
                 const valid = (information?.available_play_chances ?? 0) > 0;
                 dataInsert(information);
                 togglePlayButton(!valid);
-                generateIconSentence(this.matches, this.payout);
                 setMaxBet(information?.available_play_chances ?? 0);
                 this.chances = information?.available_play_chances ?? 0;
                 playButtonText.innerHTML = 'SPIN';
                 this.stop();
+                generateIconSentence(this.matches, this.payout, () => { this.zoomOut(); });
             }
         }
     }
