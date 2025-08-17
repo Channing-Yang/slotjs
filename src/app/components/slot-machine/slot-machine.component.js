@@ -131,7 +131,7 @@ function generateIconSentence(matches, payout, callback) {
     let icon = '';
 
     if (Array.isArray(matches) && matches.length === 0) {
-        text = 'No consecutive icons';
+        text = 'Sorry no consecutive icons.<br />You earned 1 coin.';
         title = 'Sorry!';
         icon = 'error';
     } else if (typeof matches === 'object' && !Array.isArray(matches)) {
@@ -142,7 +142,7 @@ function generateIconSentence(matches, payout, callback) {
         });
 
         // Join with commas and add exclamation
-        text = `${ items.join(' and ') } consecutive icons! Congratulations you earned ${ payout } coin(s)`;
+        text = `${ items.join(' and ') } consecutive icons!<br />Congratulations you earned ${ payout } coin(s)`;
         title = 'Congratulations!';
         icon = 'success';
     }
@@ -557,7 +557,9 @@ export class SlotMachine {
                 this.chances = information?.available_play_chances ?? 0;
                 playButtonText.innerHTML = 'SPIN';
                 this.stop();
-                generateIconSentence(this.matches, this.payout, () => { this.zoomOut(); });
+                setTimeout(() => {
+                    generateIconSentence(this.matches, this.payout, () => { this.zoomOut(); });
+                }, 1000);
             }
         }
     }
